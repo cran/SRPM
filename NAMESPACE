@@ -1,0 +1,31 @@
+## Author tools
+export(
+       "makeWebpage",
+       "makeSRP"
+       )
+
+
+## Reader tools
+export(
+       "setPackage",
+       "currentPackage",
+       "getRemoteURL",
+       "getLocalDir",
+       "runcode",
+       "loadcache",
+       "code",
+       "figure",
+       "article",
+       "cache"
+       )
+
+
+## Classes/Methods
+exportClasses("codeObject", "codeChunkList", "URLObject")
+exportMethods("show", "view", "viewplot", "edit", "toHTML")
+
+import("stashR")
+importFrom("utils",
+           "edit")
+importClassesFrom("filehash",
+                  "filehash", "filehashDB1", "filehashRDS")

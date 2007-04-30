@@ -1,0 +1,31 @@
+nocache.pdf
+text: code/nocache-LoadPackages.R
+db:
+fig:
+name: LoadPackages
+
+text: code/nocache-FitLinearModel.R
+db:
+fig:
+name: FitLinearModel
+
+text: code/nocache-CoefficientTable.R
+db:
+fig:
+name: CoefficientTable
+
+text: code/nocache-LinearModelDiagnosticPlots.R
+db:
+fig: figures/nocache-LinearModelDiagnosticPlots.pdf
+name: LinearModelDiagnosticPlots
+
+text: code/nocache-BivariateRegression.R
+db:
+fig:
+name: BivariateRegression
+
+text: code/nocache-PlotRegressionLine.R
+db:
+fig: figures/nocache-PlotRegressionLine.pdf
+name: PlotRegressionLine
+
