@@ -7,7 +7,7 @@
   Create a reproducible research package from a Sweave file
 }
 \usage{
-makeSRP(pkg, SweaveFile, clean = TRUE)
+makeSRP(pkg, SweaveFile = NULL, clean = TRUE)
 makeWebpage(clear = FALSE)
 }
 %- maybe also 'usage' for other objects documented here.
@@ -32,6 +32,9 @@ makeWebpage(clear = FALSE)
   to the package.  \code{makeWebpage} places the HTML files in a
   directory called "html" under the main directory of the reproducible
   research package.
+
+  If \code{SweaveFile} is \code{NULL} then it defaults to using
+  \code{<pkg>.Rnw}.
 }
 
 \value{

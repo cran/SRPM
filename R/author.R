@@ -118,11 +118,13 @@ copyArticle <- function(pkg, SweaveFile, metaList) {
 ## Main function for making reproducibile research packages
 ################################################################################
 
-makeSRP <- function(pkg, SweaveFile, clean = TRUE) {
+makeSRP <- function(pkg, SweaveFile = NULL, clean = TRUE) {
+        if(is.null(SweaveFile))
+                SweaveFile <- paste(pkg, "Rnw", sep = ".")
         if(file.exists(pkg))
-                stop(gettextf("directory '%s' already exists"))
+                stop(gettextf("directory '%s' already exists", pkg))
         if(!file.exists(SweaveFile))
-                stop(gettextf("'%s' file not found"))
+                stop(gettextf("'%s' file not found", SweaveFile))
         
         message("creating package directories...")
         createPackageDirectories(pkg)

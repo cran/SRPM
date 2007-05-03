@@ -19,9 +19,8 @@ Type 'q()' to quit R.
 Loading required package: stashR
 Loading required package: filehash
 Simple key-value database (1.0 2007-04-27)
-Loading required package: digest
 A Set of Tools for Administering SHared Repositories (0.3 2007-04-27)
-Shared Reproducibility Package Management (0.1 2007-04-30)
+Shared Reproducibility Package Management (0.1-1 2007-05-03)
 > 
 > pkg <- system.file("SRP-ex", "srp_simpleRR", package = "SRPM")
 > setPackage(pkg)
@@ -57,7 +56,7 @@ loading cache for code chunk 2
 > runcode(3)
 running code in code chunk 3
 % latex table generated in R 2.5.0 by xtable 1.4-3 package
-% Tue May  1 15:59:43 2007
+% Thu May  3 11:51:12 2007
 \begin{table}[ht]
 \begin{center}
 \begin{tabular}{rrrrr}
@@ -79,7 +78,7 @@ running code in code chunk 1
 running code in code chunk 2
 running code in code chunk 3
 % latex table generated in R 2.5.0 by xtable 1.4-3 package
-% Tue May  1 15:59:43 2007
+% Thu May  3 11:51:12 2007
 \begin{table}[ht]
 \begin{center}
 \begin{tabular}{rrrrr}
@@ -131,7 +130,7 @@ running code in code chunk 1
 running code in code chunk 2
 running code in code chunk 3
 % latex table generated in R 2.5.0 by xtable 1.4-3 package
-% Tue May  1 15:59:43 2007
+% Thu May  3 11:51:12 2007
 \begin{table}[ht]
 \begin{center}
 \begin{tabular}{rrrrr}
