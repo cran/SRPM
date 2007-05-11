@@ -1,6 +1,6 @@
 Package:  SRPM
-Version:  0.1-1
-Date:  2007-05-03
+Version:  0.1-2
+Date:  2007-05-11
 Depends:  R (>= 2.4.1), methods, stashR
 Imports:  utils, filehash, cacheSweave, stashR
 Collate:  author.R reader.R html.R zzz.R
@@ -9,4 +9,4 @@ Description:  A package development and management system for distributed reprod
 License:  GNU GPL (version 2 or later)
 Author:  Roger D. Peng
 Maintainer:  Roger D. Peng <rpeng@jhsph.edu>
-Packaged: Thu May  3 16:45:59 2007; rpeng
+Packaged: Fri May 11 16:25:39 2007; rpeng

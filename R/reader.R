@@ -3,6 +3,9 @@
 ################################################################################
 
 setPackage <- function(name) {
+        if(length(grep("^http://", name)) > 0)
+                name <- getRemoteZipFile(name)
+
         ## strip off any leading slash
         name <- sub("\\/$", "", name, perl = TRUE)
         assign("package", name, .configEnv)
@@ -27,6 +30,27 @@ setPackage <- function(name) {
         metafile <- file.path(currentPackage(), "metadata.dcf")
         metadata <- readMetaData(metafile)
         setMetaData(metadata)
+}
+
+getRemoteZipFile <- function(name) {
+        localFile <- basename(name)
+        download.file(name, localFile, mode = "wb")
+        unzip <- getOption("unzip")
+
+        if(!nchar(unzip) || unzip == "internal")
+                stop(gettextf("cannot find 'unzip' program; downloaded file left in '%s'", localFile))
+        
+        cmd <- paste(unzip, shQuote(localFile))
+        message("unzipping package...")
+
+        status <- if(.Platform$OS.type == "windows") 
+                system(cmd, invisible = TRUE)
+        else 
+                system(paste(cmd, "> /dev/null"))
+
+        if(status > 0)
+                stop(gettextf("problem unzipping file '%s'", localFile))
+        sub("\\.zip$", "", localFile)
 }
 
 readMetaData <- function(filename) {
@@ -73,7 +97,7 @@ setMetaData <- function(metadata) {
 }
 
 currentPackage <- function() {
-        cpkg <- try(get("package", .configEnv), silent = TRUE)
+        cpkg <- try(get("package", .configEnv, inherits = FALSE), silent = TRUE)
 
         if(inherits(cpkg, "try-error"))
                 stop("use 'setPackage()' to register a package")
@@ -91,7 +115,7 @@ setRemoteURL <- function(url) {
 
 getRemoteURL <- function() {
         tryCatch({
-                get("RemoteURL", .configEnv)
+                get("RemoteURL", .configEnv, inherits = FALSE)
         }, error = function(err) {
                 NULL
         })
@@ -110,7 +134,8 @@ setLocalDir <- function(dir = NA) {
 }
 
 getLocalDir <- function() {
-        dir <- try(get("LocalDir", .configEnv), silent = TRUE)
+        dir <- try(get("LocalDir", .configEnv, inherits = FALSE),
+                   silent = TRUE)
 
         if(inherits(dir, "try-error"))
                 stop("directory for local storage not available")
