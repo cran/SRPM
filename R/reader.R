@@ -2,6 +2,22 @@
 ## Functions for readers
 ################################################################################
 
+## This is for testing right now --- not public
+reposSRP <- "http://www.biostat.jhsph.edu/~rpeng/RR"
+
+getPackage <- function(id, type = c("complete", "remote")) {
+        type <- match.arg(type)
+        urldir <- paste(reposSRP, id, sep = "/")
+        zipfile <- switch(type,
+                          complete = paste("srp-", id, ".zip", sep = ""),
+                          remote = paste("srp-", id, "_R.zip", sep = "")
+                          )
+        download.file(paste(urldir, zipfile, sep = "/"), zipfile)
+        zipfile
+}
+
+################################################################################
+
 setPackage <- function(name) {
         if(length(grep("^http://", name)) > 0)
                 name <- getRemoteZipFile(name)
@@ -39,7 +55,8 @@ getRemoteZipFile <- function(name) {
 
         if(!nchar(unzip) || unzip == "internal")
                 stop(gettextf("cannot find 'unzip' program; downloaded file left in '%s'", localFile))
-        
+
+        ## This paradigm is taken from 'zip.file.extract'
         cmd <- paste(unzip, shQuote(localFile))
         message("unzipping package...")
 

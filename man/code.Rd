@@ -73,7 +73,7 @@ edit(name, ...)
 \author{Roger D. Peng \email{rpeng@jhsph.edu}}
 
 \examples{
-pkg <- system.file("SRP-ex", "srp_simpleRR", package = "SRPM")
+pkg <- system.file("SRP-ex", "srp_simple", package = "SRPM")
 setPackage(pkg)
 
 ## Show annotated list of code chunks

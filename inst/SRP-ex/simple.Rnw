@@ -24,7 +24,7 @@ We fit a linear model to the \texttt{airquality} dataset.  In this
 code chunk we will turn caching on so that we cache the
 \texttt{airquality} data frame and the \texttt{fit} object.
 <<FitLinearModel,cache=true>>=
-data(airquality, envir = environment())
+data(airquality)
 fit <- lm(Ozone ~ Temp + Wind + Solar.R, data = airquality)
 @
 

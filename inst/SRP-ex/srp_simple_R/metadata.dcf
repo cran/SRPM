@@ -1,0 +1,21 @@
+simple.pdf
+text: code/simple-LoadPackages.R
+db:
+fig:
+name: LoadPackages
+
+text: code/simple-FitLinearModel.R
+db: cacheDB/FitLinearModel
+fig:
+name: FitLinearModel
+
+text: code/simple-CoefficientTable.R
+db:
+fig:
+name: CoefficientTable
+
+text: code/simple-LinearModelDiagnosticPlots.R
+db:
+fig: figures/simple-LinearModelDiagnosticPlots.pdf
+name: LinearModelDiagnosticPlots
+

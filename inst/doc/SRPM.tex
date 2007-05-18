@@ -1,0 +1,391 @@
+\documentclass{article}
+
+%%\VignetteIndexEntry{The SRPM Package}
+%%\VignetteDepends{SRPM}
+
+\usepackage{amsmath}
+\usepackage{hyperref}
+\usepackage{natbib}
+\usepackage[margin=1.25in]{geometry}
+\usepackage{charter}
+\newcommand{\proglang}{\textsf}
+\newcommand{\code}{\texttt}
+\newcommand{\pkg}{\textbf}
+\renewcommand{\baselinestretch}{1.1}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% declarations for jss.cls %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% almost as usual
+\author{Roger D. Peng\\Department of Biostatistics\\Johns Hopkins Bloomberg School of Public Health}
+
+\title{The \pkg{SRPM} Package}
+
+%% end of declarations %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\usepackage{/home/rpeng/install/R-2.5.0/lib64/R/share/texmf/Sweave}
+\begin{document}
+
+%% include your article here, just as usual
+%% Note that you should use the \pkg{}, \proglang{} and \code{} commands.
+
+\maketitle
+
+\section{Introduction}
+
+The \pkg{SRPM} package (``Shared Reproducibility Package Management'')
+provides tools for creating and interacting with what we call ``shared
+reproducibility packages''.  These shared reproducibility packages
+(SRPs) are \textit{not} true \proglang{R} packages but rather contain
+information related to a Sweave document that can be distributed to a
+wide audience and used to reproduce the results.  The format of an SRP
+is meant to be simple so that it can be used on different systems.
+
+Each package is simply a directory which contains the following
+subdirectories:
+\begin{itemize}
+\item
+\code{article/}: contains the original Sweave file and a ``weaved''
+version of the file (e.g. in PDF format)
+\item
+\code{figures/}: contains files corresponding to any figures in the
+document
+\item
+\code{cacheDB/}: contains a collection of \pkg{stashR} databases
+storing any cached computations from code chunks
+\item
+\code{code/}: contains code files corresponding to the \proglang{R}
+code for each code chunk in the Sweave document (these are produced
+with the \code{Stangle} function with the argument \code{split =
+TRUE}).
+\end{itemize}
+Each SRP also has a file called \code{metadata.dcf} which is a text
+file containing information about each of the code chunks in the
+document.  This file is written in the Debian Control File format.
+
+In addition, a package may contain a file named \code{REMOTE} which
+contains the URL of the location of any remote \pkg{stashR} databases
+containing cached computations.  If the size of the cached computation
+databases is large, an author may wish to post them on a webserver
+rather than distribute them with the SRP itself.  The \code{REMOTE}
+file indicates the location of the cached computation databases and
+configures the other tools in the \pkg{SRPM} package to retrieve data
+from this location using the functionality in the \pkg{stashR}
+package.
+
+
+\section{Author tools}
+
+A shared reproducibility package can be constructed with the
+\code{makeSRP} function from the \pkg{SRPM} package which takes as
+arguments the name of the package to create and the name of the Sweave
+file for the original document.  The \code{makeSRP} function
+\begin{enumerate}
+\item
+creates the necessary directories for the SRP;
+\item
+calls \code{Stangle} to create individual code files for each code
+chunk and copies the files into the \code{code/} subdirectory;
+\item
+copies the \pkg{stashR} databases containing the cached computations
+into the \code{cacheDB/} subdirectory;
+\item
+copies graphics files corresponding to figures into the
+\code{figures/} subdirectory;
+\item
+copies the article PDF file and Sweave file into the \code{article/}
+subdirectory;
+\item
+creates the metadata file by reading the map file produced by the
+\pkg{cacheSweave} package and writes it to the \code{metadata.dcf}
+file.
+\end{enumerate}
+Currently, the \pkg{SRPM} package requires that both the graphics
+files for the figures and the weaved version of the article be in PDF
+format, however we hope to remove this limitation in the near future.
+
+Another function that is available to authors is the
+\code{makeWebpage} function which produces a simple webpage
+corresponding to an SRP.  The webpage lists all of the code chunks in
+a document with links to the code itself.  Also, there are links to
+cache databases as well as the PDF versions of figures so that readers
+can browse an SRP using a web browser and without having to have R
+installed.
+
+
+
+
+
+
+\section{Reader tools}
+
+Sweave is an example of a tool that is useful to authors of
+statistical or scientific documents in that it assists in the
+development of documents by ensuring that the text and data analysis
+are closely integrated into a single document.  However, readers of
+reproducible documents also need tools to assist them with interacting
+with the data analyses therein and reproducing key results.
+
+In the \pkg{SRPM} package we provide some basic tools for readers of
+Sweave documents that allow them to interact with the code and data
+provided by a shared reproducibility package created by the author.
+The basic functions are
+\begin{itemize}
+\item
+\code{code}: When called with no arguments, a listing of all the code
+chunks in the article is printed to the console.  The \code{code}
+function can also take a numeric argument corresponding to the code
+chunk sequence number of a character argument corresponding to the
+code chunk name.  When \code{code} is passed a numeric or character
+argument, it returns an object of class ``codeObject'' which contains
+the code and pointers to any cached computation databases or figures
+associated with the code chunk.
+\item
+\code{article}: This function takes no arguments; when called it
+launches the article PDF document in the PDF viewer.
+\item
+\code{figure}: This function must be given a numeric argument
+corresponding to the figure number in the original article.  When
+called, it displays in the PDF viewer the figure corresponding to the
+figure number.
+\item
+\code{cache}: This function takes a code chunk sequence number or a
+code chunk name (character) as an argument and returns an object of
+class ``localDB'' or ``remoteDB'' depending on whether the SRP is
+using local or remote cached computation databases.  This object can
+be explored with the methods defined in the \pkg{stashR}
+package~\citep[see also details in][]{ecke:peng:2006}.
+\item
+\code{loadcache}: This function lazy-loads cached computation
+databases into the global environment.  It takes a numeric vector of
+code chunk sequence numbers or a character vector of code chunk names
+and loads the cached computation databases associated with those code
+chunks in the order that they are specified.  Once a database is
+lazy-loaded, the object names appear in the environment into which
+the database was loaded, but they do not occupy any extra memory
+until they are first accessed.  If a specified code chunk does not
+have a database associated with it, no action is taken.
+\item
+\code{runcode}: The \code{runcode} function takes as input a numeric
+vector of code chunk sequence numbers or a character vector of code
+chunk names and executes the code in those code chunks.  Each code
+chunk is evaluated in the order in which it appears in the input
+vector.  By default, if a cached computation database is associated
+with a code chunk, then the database is lazy-loaded via
+\code{loadcache} rather than executed.  In order to force evaluation
+of code in a code chunk with a cache database, one needs to set
+\code{useCache = FALSE} when calling \code{runcode}.  If an error
+occurs when executing the code in a code chunk, a message is printed
+to the console indicating the error and the code chunk is skipped.
+\item
+\code{edit}: A method is provided for the \code{edit} generic function
+for objects of class ``codeObject'' which can be used to edit the
+\proglang{R} code corresponding to a code chunk.  The modified
+``codeObject'' object can be executed with the \code{runcode}
+function.  The \code{edit} method returns the modified copy of the
+object so that the original code is not modified.  The editor used is
+that which is launched by the \code{file.edit} function and will be
+system dependent.
+\end{itemize}
+
+These functions consist of the primary user interface for readers to
+interact with shared reproducibility package.  Certain SRPs may also
+require that other \proglang{R} packages be installed in order to
+execute the code in the code chunks and these should be installed
+before attempting to execute the code with \code{runcode}.
+
+Other utility functions available to the user are
+\code{currentPackage}, which shows the currently registered SRP,
+\code{getRemoteURL}, which returns the URL of the remote cached
+computation databases (if any), and \code{getLocalDir}, which returns
+the path to the directory where local copies of the remote cache
+databases will be stored.
+
+
+
+
+
+
+
+\section{Example}
+\label{sec:example}
+
+The \pkg{SRPM} package depends on the \pkg{methods} and \pkg{stashR}
+packages and additionally imports the \pkg{utils}, \pkg{filehash}, and
+\pkg{cacheSweave} packages.  Once those dependencies are installed,
+the \pkg{SRPM} package can be loaded using \code{library} in the usual
+way.
+
+The first thing a user must do is register a shared reproducibility
+package (SRP) using the \code{setPackage} function.  We will use as an
+example a simple SRP called \code{srp\_simple} that comes with the
+\pkg{SRPM} package.  The package can be registered by passing the name
+of the directory to the \code{setPackage} function.
+\begin{Schunk}
+\begin{Sinput}
+> library(SRPM)
+> pkgdir <- system.file("SRP-ex", "srp_simple", package = "SRPM")
+> setPackage(pkgdir)
+\end{Sinput}
+\end{Schunk}
+Upon registering a package one can call the \code{article} function
+(with no arguments) to open a PDF copy of the full article in the PDF
+viewer (as identified by \code{getOption("pdfviewer")}).  Another
+useful function to begin with is the \code{code} function.  Called
+with no arguments, \code{code} lists all of the code chunks in the
+article.
+\begin{Schunk}
+\begin{Sinput}
+> code()
+\end{Sinput}
+\begin{Soutput}
+1 LoadPackages  
+2 FitLinearModel  [C]
+3 CoefficientTable  
+4 LinearModelDiagnosticPlots [Figure 1] 
+\end{Soutput}
+\end{Schunk}
+
+The code chunk listing is annotated with three different types of
+tags.  The first is the code chunk sequence number which appears to
+the left of the code chunk name.  This number can be used to identify
+a code chunk in other operations.  The second is a \texttt{[C]} which
+indicates caching has been turned on and that the corresponding code
+chunk gives rise to a cached computation database.  Lastly, code
+chunks with the tag \texttt{[Figure ?]} produce figures or plots.  For
+example, code chunk 4 produces Figure 1 in the original article.
+
+%% runcode example
+
+Code in any of the code chunks can be executed with the \code{runcode}
+function by passing the code chunk name or sequence number.  Sequences
+of code chunks can be executed by passing a numeric or character
+vector to \code{runcode}.  For example, to execute the code in chunks
+1 through 3 to create the table of regression coefficients, we can
+execute
+\begin{Schunk}
+\begin{Sinput}
+> runcode(1:3)
+\end{Sinput}
+\end{Schunk}
+which prints the following messages
+\begin{verbatim}
+running code in code chunk 1
+loading cache for code chunk 2
+running code in code chunk 3
+\end{verbatim}
+and prints a table to the console (here, using the \pkg{xtable}
+package).  Code chunk 2 has a cached computation database associated
+with it so the database is lazy-loaded into the workspace instead of
+the code being executed.  Code chunk 3 creates the table and it is
+executed successfully.
+
+%% loadcache example
+
+In order to explicitly lazy-load a cached computation database into
+the workspace one can use the \code{loadcache} function.  For example,
+to load the database for code chunk 2, one can call
+\begin{Schunk}
+\begin{Sinput}
+> loadcache(2)
+> ls()
+\end{Sinput}
+\begin{Soutput}
+[1] "airquality" "fit"        "pkgdir"    
+\end{Soutput}
+\end{Schunk}
+
+The ``localDB'' object representing the cached computation database
+can be explicitly retrieved by calling the \code{cache} function and
+accessed using the methods defined in the \pkg{stashR} package.  The
+above code fragment is roughly equivalent to
+\begin{Schunk}
+\begin{Sinput}
+> library(stashR)
+> db <- cache(2)
+> show(db)
+\end{Sinput}
+\begin{Soutput}
+'localDB' database 'FitLinearModel'
+\end{Soutput}
+\begin{Sinput}
+> dbList(db)
+\end{Sinput}
+\begin{Soutput}
+[1] "airquality" "fit"       
+\end{Soutput}
+\begin{Sinput}
+> dbLazyLoad(db)
+\end{Sinput}
+\end{Schunk}
+
+
+%% \section{Remote packages}
+%% 
+%% Shared reproducibility packages can be structured in such a way that
+%% the cached computation databases can be stored on a remote server and
+%% accessed over the web using \proglang{R}'s Internet capabilities.  In
+%% that case the SRP that is distributed does not have any of the
+%% \pkg{stashR} databases in it but rather contains a \code{REMOTE} file
+%% containing the URL indicating the location of the cached computation
+%% databases on the web.  A remote version of the \code{srp\_simple}
+%% package called \code{srp\_simple\_R} is available in the \pkg{SRPM}
+%% package and can be loaded by calling \code{setPackage}.
+%% <<LoadRemoteSRPSimple>>=
+%% pkgdir <- system.file("SRP-ex", "srp_simple_R", package = "SRPM")
+%% @ 
+%% <<setPackageRemote,eval=false>>=
+%% setPackage(pkgdir)
+%% @ 
+%% The \code{REMOTE} file for this package contains the following information:
+%% <<loadRemoteSRP>>=
+%% remote <- readLines(file.path(pkgdir, "REMOTE"))
+%% writeLines(remote)
+%% @
+%% 
+%% The \code{RemoteURL} field in the file contains the URL for the cached
+%% computation databases.  If a \code{REMOTE} file exists it is
+%% automatically read by the \code{setPackage} function.  The remote URL
+%% can be retrieved in an \proglang{R} session via the
+%% \code{getRemoteURL} function.  Once a remote package is registered
+%% with \code{setPackage} all of the functions mentioned above will work,
+%% however, depending on the speed of the network connection there may be
+%% some delay in downloading large objects when they are accessed.
+
+%% As a convenience, \code{setPackage} can download and unzip the SRP for
+%% you, provided a suitable \code{unzip} program is available.  For
+%% example, running
+%% <<getRemoteZipFile,eval=false>>=
+%% setPackage("http://www.biostat.jhsph.edu/~rpeng/RR/srp_seasonal_R.zip")
+%% @ 
+%% will download and unzip the SRP as well as register it as the
+%% current package
+
+
+\section{Package websites}
+
+If the author has created a webpage via the \code{makeWebpage}
+function, the reader may prefer to view that first.  The webpage
+created by \code{makeWebpage} corresponding to the
+\code{srp\_simple} package can be found at
+\begin{verbatim}
+http://www.biostat.jhsph.edu/~rpeng/RR/ea6883e28967ec48a0ee009585da0eb0/html/
+\end{verbatim}
+Currently, the webpage created by \code{makeWebpage} resembles the
+output provided by the \proglang{R} functions at the console.  The
+cached computation databases can be browsed in a limited
+fashion---smaller objects can be viewed in their entirety while for
+larger objects a summary is provided by showing the output from
+\code{str}.
+
+
+
+
+
+\bibliography{combined}
+\bibliographystyle{jss}
+
+
+\end{document}

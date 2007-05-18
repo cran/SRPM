@@ -15,18 +15,13 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
-> library(SRPM)
-Loading required package: stashR
-Loading required package: filehash
-Simple key-value database (1.0 2007-04-27)
-A Set of Tools for Administering SHared Repositories (0.3 2007-04-27)
-Shared Reproducibility Package Management (0.1-1 2007-05-03)
+> suppressMessages(library(SRPM))
 > 
-> pkg <- system.file("SRP-ex", "srp_simpleRR", package = "SRPM")
+> pkg <- system.file("SRP-ex", "srp_simple", package = "SRPM")
 > setPackage(pkg)
 > 
 > currentPackage()
-[1] "/home/rpeng/projects/R-packages/SRPM.Rcheck/SRPM/SRP-ex/srp_simpleRR"
+[1] "/home/rpeng/projects/R-packages/SRPM.Rcheck/SRPM/SRP-ex/srp_simple"
 > 
 > ## Show annotated list of code chunks
 > code()
@@ -41,7 +36,7 @@ Shared Reproducibility Package Management (0.1-1 2007-05-03)
 Formal class 'codeObject' [package "SRPM"] with 3 slots
   ..@ text: chr [1:7] "###################################################" "### chunk number 2: FitLinearModel" "###################################################" "data(airquality)" ...
   ..@ db  :Formal class 'localDB' [package "stashR"] with 3 slots
-  .. .. ..@ dir         : chr "/home/rpeng/projects/R-packages/SRPM.Rcheck/SRPM/SRP-ex/srp_simpleRR/cacheDB/FitLinearModel"
+  .. .. ..@ dir         : chr "/home/rpeng/projects/R-packages/SRPM.Rcheck/SRPM/SRP-ex/srp_simple/cacheDB/FitLinearModel"
   .. .. ..@ reposVersion: num -1
   .. .. ..@ name        : chr "FitLinearModel"
   ..@ fig : chr ""
@@ -50,13 +45,13 @@ Formal class 'codeObject' [package "SRPM"] with 3 slots
 > loadcache(2)
 loading cache for code chunk 2
 > ls()
-[1] "co"  "fit" "pkg"
+[1] "airquality" "co"         "fit"        "pkg"       
 > 
 > ## Make table from code chunk 3
 > runcode(3)
 running code in code chunk 3
-% latex table generated in R 2.5.0 by xtable 1.4-3 package
-% Thu May  3 11:51:12 2007
+% latex table generated in R 2.5.0 by xtable 1.4-5 package
+% Fri May 18 10:08:12 2007
 \begin{table}[ht]
 \begin{center}
 \begin{tabular}{rrrrr}
@@ -77,8 +72,8 @@ running code in code chunk 3
 running code in code chunk 1
 running code in code chunk 2
 running code in code chunk 3
-% latex table generated in R 2.5.0 by xtable 1.4-3 package
-% Thu May  3 11:51:12 2007
+% latex table generated in R 2.5.0 by xtable 1.4-5 package
+% Fri May 18 10:08:12 2007
 \begin{table}[ht]
 \begin{center}
 \begin{tabular}{rrrrr}
@@ -95,12 +90,12 @@ running code in code chunk 3
 \end{table}
 running code in code chunk 4
 > 
-> library(stashR)
+> suppressMessages(library(stashR))
 > db <- cache(2)
 > show(db)
 'localDB' database 'FitLinearModel'
 > dbList(db)
-[1] "fit"
+[1] "airquality" "fit"       
 > 
 > 
 > 
@@ -129,8 +124,8 @@ Formal class 'codeObject' [package "SRPM"] with 3 slots
 running code in code chunk 1
 running code in code chunk 2
 running code in code chunk 3
-% latex table generated in R 2.5.0 by xtable 1.4-3 package
-% Thu May  3 11:51:12 2007
+% latex table generated in R 2.5.0 by xtable 1.4-5 package
+% Fri May 18 10:08:12 2007
 \begin{table}[ht]
 \begin{center}
 \begin{tabular}{rrrrr}

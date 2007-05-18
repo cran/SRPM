@@ -1,6 +1,6 @@
-library(SRPM)
+suppressMessages(library(SRPM))
 
-pkg <- system.file("SRP-ex", "srp_simpleRR", package = "SRPM")
+pkg <- system.file("SRP-ex", "srp_simple", package = "SRPM")
 setPackage(pkg)
 
 currentPackage()
@@ -22,7 +22,7 @@ runcode(3)
 ## Run all code without cache
 runcode(1:4, useCache = FALSE)
 
-library(stashR)
+suppressMessages(library(stashR))
 db <- cache(2)
 show(db)
 dbList(db)
