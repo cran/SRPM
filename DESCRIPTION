@@ -1,9 +1,9 @@
 Package: SRPM
-Version: 0.1-6
-Date: 2010-04-12
-Depends: R (>= 2.10.0), methods, stashR
-Imports: utils, filehash, cacheSweave, stashR
-LazyLoad: yes
+Version: 0.1-7
+Date: 2012-06-22
+Depends: R (>= 2.14.0), methods, stashR
+Imports: utils, filehash, cacheSweave
+Suggests: xtable
 Collate: author.R reader.R html.R zzz.R
 Title: Shared Reproducibility Package Management
 Description: A package development and management system for
@@ -11,6 +11,6 @@ Description: A package development and management system for
 License: GPL (>= 2)
 Author: Roger D. Peng
 Maintainer: Roger D. Peng <rpeng@jhsph.edu>
-Packaged: 2010-04-12 15:23:20 UTC; rdpeng
+Packaged: 2012-06-22 17:24:52 UTC; rdpeng
 Repository: CRAN
-Date/Publication: 2010-04-12 18:23:47
+Date/Publication: 2012-06-22 17:43:05

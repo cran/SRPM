@@ -25,7 +25,6 @@
 %% end of declarations %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-\usepackage{Sweave}
 \begin{document}
 
 %% include your article here, just as usual
@@ -223,30 +222,20 @@ package (SRP) using the \code{setPackage} function.  We will use as an
 example a simple SRP called \code{srp\_simple} that comes with the
 \pkg{SRPM} package.  The package can be registered by passing the name
 of the directory to the \code{setPackage} function.
-\begin{Schunk}
-\begin{Sinput}
-> library(SRPM)
-> pkgdir <- system.file("SRP-ex", "srp_simple", package = "SRPM")
-> setPackage(pkgdir)
-\end{Sinput}
-\end{Schunk}
+<<loadSRPM>>=
+library(SRPM)
+pkgdir <- system.file("SRP-ex", "srp_simple", package = "SRPM")
+setPackage(pkgdir)
+@
 Upon registering a package one can call the \code{article} function
 (with no arguments) to open a PDF copy of the full article in the PDF
 viewer (as identified by \code{getOption("pdfviewer")}).  Another
 useful function to begin with is the \code{code} function.  Called
 with no arguments, \code{code} lists all of the code chunks in the
 article.
-\begin{Schunk}
-\begin{Sinput}
-> code()
-\end{Sinput}
-\begin{Soutput}
-1 LoadPackages  
-2 FitLinearModel  [C]
-3 CoefficientTable  
-4 LinearModelDiagnosticPlots  
-\end{Soutput}
-\end{Schunk}
+<<listCodeChunks>>=
+code()
+@
 
 The code chunk listing is annotated with three different types of
 tags.  The first is the code chunk sequence number which appears to
@@ -265,11 +254,9 @@ of code chunks can be executed by passing a numeric or character
 vector to \code{runcode}.  For example, to execute the code in chunks
 1 through 3 to create the table of regression coefficients, we can
 execute
-\begin{Schunk}
-\begin{Sinput}
-> runcode(1:3)
-\end{Sinput}
-\end{Schunk}
+<<runcode,eval=false>>=
+runcode(1:3)
+@
 which prints the following messages
 \begin{verbatim}
 running code in code chunk 1
@@ -287,39 +274,22 @@ executed successfully.
 In order to explicitly lazy-load a cached computation database into
 the workspace one can use the \code{loadcache} function.  For example,
 to load the database for code chunk 2, one can call
-\begin{Schunk}
-\begin{Sinput}
-> loadcache(2)
-> ls()
-\end{Sinput}
-\begin{Soutput}
-[1] "airquality" "fit"        "pkgdir"    
-\end{Soutput}
-\end{Schunk}
+<<loadcache>>=
+loadcache(2)
+ls()
+@
 
 The ``localDB'' object representing the cached computation database
 can be explicitly retrieved by calling the \code{cache} function and
 accessed using the methods defined in the \pkg{stashR} package.  The
 above code fragment is roughly equivalent to
-\begin{Schunk}
-\begin{Sinput}
-> library(stashR)
-> db <- cache(2)
-> show(db)
-\end{Sinput}
-\begin{Soutput}
-'localDB' database 'FitLinearModel'
-\end{Soutput}
-\begin{Sinput}
-> dbList(db)
-\end{Sinput}
-\begin{Soutput}
-[1] "airquality" "fit"       
-\end{Soutput}
-\begin{Sinput}
-> dbLazyLoad(db)
-\end{Sinput}
-\end{Schunk}
+<<getCacheDB>>=
+library(stashR)
+db <- cache(2)
+show(db)
+dbList(db)
+dbLazyLoad(db)
+@
 
 
 %% \section{Remote packages}
